@@ -7,28 +7,51 @@ from sentence_transformers import SentenceTransformer
 
 # --- Page Config ---
 st.set_page_config(
-    page_title="NotionAtlas",
+    page_title="NotionAtlas — AI Semantic Search & RAG for Notion",
     page_icon="🧭",
     layout="wide"
 )
 
-# --- Title with Inline GitHub Icon ---
+# ---------- HEADER & TITLE ----------
 st.markdown(
     """
-    <div style="display:flex; justify-content:center; align-items:center; gap:10px; padding: 20px 0;">
-        <h1 style="margin-bottom:0;">🧭 NotionAtlas</h1>
-        <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank">
-            <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" width="28" style="margin-top:5px"/>
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1.1em;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" width="46" style="margin-right:13px">
+        <h1 style="display:inline; margin:0 0 0 4px; font-size:2.15em; font-family:sans-serif;">
+            NotionAtlas
+            <span style="font-weight:400; font-size:0.58em;">— AI Semantic Search & RAG Assistant for Notion</span>
+        </h1>
+        <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank" title="GitHub Repo">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="28" style="margin-left:12px;vertical-align:middle"/>
         </a>
     </div>
-    <h3 style="text-align:center; color: gray; font-weight: 400; margin-top: 0;">
-        Turn your Notion workspace into an intelligent, searchable knowledge hub.
-    </h3>
     """,
     unsafe_allow_html=True
 )
+st.caption("Supercharge your Notion workspace with instant, context-aware answers powered by advanced AI and semantic search.")
 
+# ---------- SIDEBAR ----------
+with st.sidebar:
+    st.image("https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png", width=52)
+    st.title("NotionAtlas")
+    st.markdown("""
+    <span style='font-size:1.12em;'>AI Semantic Search & RAG Assistant for Notion</span>
+    - [GitHub Repo](https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion)
+    """, unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("Built by [Yashraj Muthyapwar](https://github.com/Yashraj-Muthyapwar)")
 
+# ---------- TRY ASKING SECTION ----------
+st.markdown("""
+<div style='padding:18px 24px; background:linear-gradient(90deg, #ece9ff 75%, #fff 100%); border-radius:16px; margin-bottom:1.3em;'>
+    <b>💡 Try asking:</b>
+    <ul style='margin:0; padding-left:1.2em;'>
+        <li>How can I scrape tables from web pages using Pandas?</li>
+        <li>Compare Decision Trees and Neural Networks for classification.</li>
+        <li>Explain vocabulary and feature extraction in NLP.</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
 
 # --- Load Secrets ---
 LLAMA_API_URL = "https://api.llama.com/v1/chat/completions"
@@ -51,6 +74,19 @@ if "chat_history" not in st.session_state:
 if "conversation_context" not in st.session_state:
     st.session_state.conversation_context = ""
 
+# --- Chat Bubble Utility ---
+def chat_bubble(msg, sender="user"):
+    color = "#f1f3f4" if sender == "user" else "#e0f7fa"
+    icon = "🧑‍💻" if sender == "user" else "🤖"
+    align = "flex-start" if sender == "user" else "flex-end"
+    st.markdown(
+        f"""
+        <div style='background-color:{color}; padding:12px 18px; border-radius:16px; margin:8px 0; align-self:{align}; max-width:75%; font-size:1.09em'>
+            <span style='font-size:1.2em; margin-right:8px'>{icon}</span>{msg}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # --- Async Chat Function ---
 async def chat_with_memory(user_input: str):
@@ -112,17 +148,33 @@ async def chat_with_memory(user_input: str):
 
     return answer
 
-
 # --- Chat Input ---
-user_input = st.chat_input("Ask a question about your Notion workspace...")
+st.markdown("---")
+user_input = st.chat_input("Ask anything about your Notion workspace...")
 
 if user_input:
     with st.spinner("Thinking..."):
         asyncio.run(chat_with_memory(user_input))
 
-# --- Display Chat History ---
+# --- Display Chat History as Chat Bubbles ---
 for msg in st.session_state.chat_history:
     if msg["role"] == "user":
-        st.chat_message("user").markdown(msg["content"])
+        chat_bubble(msg["content"], sender="user")
     else:
-        st.chat_message("assistant").markdown(msg["content"])
+        chat_bubble(msg["content"], sender="assistant")
+
+# --- CUSTOM FOOTER & CSS ---
+st.markdown(
+    """
+    <style>
+    footer {visibility: hidden;}
+    .stTextInput>div>div>input {
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        padding: 10px;
+        font-size: 1.08em;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
