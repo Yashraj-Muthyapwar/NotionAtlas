@@ -6,22 +6,112 @@ from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 
 # --- Streamlit Page Config ---
-st.set_page_config(page_title="NotionAtlas – AI Semantic Search", page_icon="🧭", layout="wide")
-st.title("🧭 NotionAtlas: AI-Powered Semantic Search for Notion")
-st.caption("Conversational memory + semantic search for your Notion workspace.")
+st.set_page_config(
+    page_title="🧭 NotionAtlas – AI Semantic Search for Notion",
+    page_icon="🧭",
+    layout="wide"
+)
 
-# --- Load Secrets from Streamlit Cloud ---
+# --- Custom CSS for Gradient Background & Animations ---
+st.markdown(
+    """
+    <style>
+    /* Gradient background */
+    .stApp {
+        background: linear-gradient(135deg, #f0f4ff, #f8faff 50%, #ffffff);
+    }
+    /* Centered landing section */
+    .landing-container {
+        text-align: center;
+        padding: 40px 0 30px 0;
+        animation: fadeIn 1s ease-in;
+    }
+    /* Title animation */
+    .landing-title {
+        font-size: 3em;
+        margin-bottom: 0;
+        background: linear-gradient(to right, #2e5cff, #00bfa6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeIn 1.2s ease-in;
+    }
+    .landing-subtitle {
+        color: gray;
+        font-weight: 400;
+        margin-top: 0;
+        font-size: 1.3em;
+        animation: fadeIn 1.5s ease-in;
+    }
+    .landing-description {
+        color: #555;
+        font-size: 1.1em;
+        max-width: 650px;
+        margin: 20px auto;
+        animation: fadeIn 1.8s ease-in;
+    }
+    .example-queries {
+        text-align: center;
+        padding: 10px 0 30px 0;
+        animation: fadeIn 2s ease-in;
+        color: #333;
+    }
+    /* Simple fade-in keyframe */
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# --- Landing Section ---
+st.markdown(
+    """
+    <div class="landing-container">
+        <h1 class="landing-title">🧭 NotionAtlas</h1>
+        <h3 class="landing-subtitle">
+            Turn your Notion workspace into an intelligent, searchable knowledge hub.
+        </h3>
+        <p class="landing-description">
+            Ask questions in natural language and instantly retrieve context-aware insights from your notes.
+            Powered by AI semantic search with conversational memory.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <div class="example-queries">
+        <b>💡 Try asking:</b><br>
+        • "Summarize my MongoDB exam prep notes"<br>
+        • "What did I learn in Week 3: Sequence Models?"<br>
+        • "Show me all tasks marked as 'Not Started'"
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.write("---")
+
+st.subheader("💬 Ask NotionAtlas")
+st.caption("Type your question below to start a conversation with your Notion workspace.")
+
+# --- Load Secrets ---
 LLAMA_API_URL = "https://api.llama.com/v1/chat/completions"
 LLAMA_API_KEY = st.secrets["LLAMA_API_KEY"]
 QDRANT_URL = st.secrets["QDRANT_URL"]
 QDRANT_API_KEY = st.secrets["QDRANT_API_KEY"]
+HF_TOKEN = st.secrets.get("HF_TOKEN", None)
 
 COLLECTION_NAME = "notion_content"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
 # --- Initialize Clients ---
 qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
-embedder = SentenceTransformer(EMBEDDING_MODEL)
+embedder = SentenceTransformer(EMBEDDING_MODEL, use_auth_token=HF_TOKEN)
 
 # --- Session State for Memory ---
 if "chat_history" not in st.session_state:
@@ -30,31 +120,32 @@ if "chat_history" not in st.session_state:
 if "conversation_context" not in st.session_state:
     st.session_state.conversation_context = ""
 
-# --- Async Chat Function ---
+
+# --- Async Chat Function with Memory ---
 async def chat_with_memory(user_input: str):
-    # 1️⃣ Generate embedding
+    # 1️⃣ Embed user query
     vector = embedder.encode(user_input).tolist()
 
-    # 2️⃣ Retrieve from Qdrant
+    # 2️⃣ Query Qdrant
     results = qdrant.query_points(
         collection_name=COLLECTION_NAME,
         query=vector,
         limit=5
     )
 
-    # 3️⃣ Build semantic context
+    # 3️⃣ Semantic context
     context = "\n".join([
         hit.payload.get('chunk_text', '') for hit in results.points
     ]) or "No relevant context found."
 
-    # 4️⃣ Append to conversation memory
+    # 4️⃣ Append to memory
     st.session_state.conversation_context += f"\nUser: {user_input}"
     combined_context = (
         f"Conversation history:\n{st.session_state.conversation_context}\n\n"
         f"Relevant Notion context:\n{context}"
     )
 
-    # 5️⃣ Call LLAMA API asynchronously
+    # 5️⃣ Call LLAMA API
     payload = {
         "model": "Llama-4-Maverick-17B-128E-Instruct-FP8",
         "messages": [
@@ -90,14 +181,15 @@ async def chat_with_memory(user_input: str):
 
     return answer
 
-# --- Streamlit Chat Input ---
+
+# --- Chat Input ---
 user_input = st.chat_input("Ask a question about your Notion workspace...")
 
 if user_input:
     with st.spinner("Thinking..."):
         answer = asyncio.run(chat_with_memory(user_input))
 
-# --- Display Chat ---
+# --- Display Chat History ---
 for msg in st.session_state.chat_history:
     if msg["role"] == "user":
         st.chat_message("user").markdown(msg["content"])
