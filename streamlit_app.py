@@ -128,12 +128,11 @@ for msg in st.session_state.chat_history:
         st.chat_message("assistant").markdown(msg["content"])
 
 # --- SIDEBAR: Branding, Tagline, GitHub, Author ---
-# --- SIDEBAR: Branding, Tagline, GitHub, Author ---
 with st.sidebar:
+    st.image("notionatlas_logo.png", width=70)
     st.markdown(
         """
-        <div style="text-align:center; margin-bottom: 0.5em;">
-            <img src="NotionAtlas_logo.png" width="58" style="margin-bottom: 0.7em;" />
+        <div style="text-align:center; margin-top: 0.5em;">
             <div style="font-size: 1.55em; font-weight: 800; letter-spacing: -1px; margin-bottom:0.1em;">NotionAtlas</div>
             <div style="color: #7d7e8a; font-size: 1.05em; margin-bottom:1.2em;">
                 <em>AI Semantic Search & RAG Assistant for Notion</em>
@@ -142,7 +141,7 @@ with st.sidebar:
         <div style="text-align:center; margin-bottom: 1.4em;">
             <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank" style="text-decoration:none;">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="28" style="vertical-align:middle; margin-right: 6px;" />
-                <span style="font-size:1.10em; font-weight:500; color: #333; position:relative; top:0px;">View on GitHub</span>
+                <span style="font-size:1.10em; font-weight:500; color: #333;">View on GitHub</span>
             </a>
         </div>
         <hr style="border:none; border-top:1.5px solid #ececec; margin: 0.5em 0 1.2em 0;">
@@ -152,4 +151,3 @@ with st.sidebar:
         """,
         unsafe_allow_html=True
     )
-
