@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # --- Floating GitHub Button ---
-GITHUB_URL = "https://github.com/<your-username>/NotionAtlas"
+GITHUB_URL = "https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion"
 st.markdown(
     f"""
     <style>
@@ -79,8 +79,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.subheader("💬 Ask NotionAtlas")
-st.caption("Type your question below to start a conversation with your Notion workspace.")
 
 # --- Load Secrets ---
 LLAMA_API_URL = "https://api.llama.com/v1/chat/completions"
