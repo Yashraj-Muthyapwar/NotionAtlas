@@ -16,7 +16,7 @@ st.set_page_config(
 st.markdown(
     """
     <div style="display:flex; justify-content:center; align-items:center; gap:5px; padding: 10px 0;">
-        <h1 style="margin-bottom:0;"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/notion/notion-line.svg" width="48";" /> NotionAtlas AI</h1>
+        <h1 style="margin-bottom:0;"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/notion/notion-line.svg" width="58";" /> NotionAtlas AI</h1>
     </div>
     <h3 style="text-align:center; color: gray; font-weight: 400; margin-top: 0;">
         Turn your Notion workspace into an intelligent, searchable knowledge hub.
