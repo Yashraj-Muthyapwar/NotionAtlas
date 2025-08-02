@@ -13,7 +13,9 @@ st.set_page_config(
 )
 
 # --- Floating GitHub Button ---
+# --- Floating GitHub Button ---
 GITHUB_URL = "https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion"
+
 st.markdown(
     f"""
     <style>
@@ -22,7 +24,7 @@ st.markdown(
         top: 20px;
         right: 30px;
         background-color: #24292f;
-        color: white;
+        color: white !important;
         padding: 8px 16px;
         border-radius: 8px;
         text-decoration: none;
@@ -30,6 +32,7 @@ st.markdown(
         font-weight: 500;
         box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         transition: 0.2s;
+        z-index: 1000;
     }}
     .github-button:hover {{
         background-color: #444;
@@ -39,6 +42,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # --- Minimal Landing ---
 st.markdown(
