@@ -17,9 +17,6 @@ st.markdown(
     """
     <div style="display:flex; justify-content:center; align-items:center; gap:10px; padding: 20px 0;">
         <h1 style="margin-bottom:0;">🧭 NotionAtlas</h1>
-        <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank">
-            <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" width="28" style="margin-top:5px"/>
-        </a>
     </div>
     <h3 style="text-align:center; color: gray; font-weight: 400; margin-top: 0;">
         Turn your Notion workspace into an intelligent, searchable knowledge hub.
