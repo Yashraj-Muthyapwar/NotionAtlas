@@ -128,7 +128,6 @@ for msg in st.session_state.chat_history:
         st.chat_message("assistant").markdown(msg["content"])
 
 # --- SIDEBAR: Branding, Tagline, GitHub, Author ---
-# --- SIDEBAR: Branding, Tagline, GitHub, Author ---
 with st.sidebar:
     st.markdown(
         """
