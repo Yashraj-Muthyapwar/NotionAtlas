@@ -176,18 +176,4 @@ with st.container():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-# -------------------- CUSTOM FOOTER & CSS --------------------
-st.markdown("""
-    <style>
-    footer {visibility:hidden;}
-    .stTextInput>div>div>input {
-        border-radius: 12px;
-        border: 1px solid #e0e0e0;
-        padding: 12px;
-        font-size: 1.09em;
-        box-shadow: 0 1.5px 8px rgba(70,70,120,0.06);
-        margin-bottom: 8px;
-    }
-    .st-emotion-cache-1r4qj8v {padding-top: 2.2rem;} /* space below header */
-    </style>
-""", unsafe_allow_html=True)
+
