@@ -129,7 +129,7 @@ for msg in st.session_state.chat_history:
 
 # --- SIDEBAR: Branding, Tagline, GitHub, Author ---
 with st.sidebar:
-    st.image("notionatlas_logo.png", width=70)
+    st.image("NotionAtlas_logo.png", width=70)
     st.markdown(
         """
         <div style="text-align:center; margin-top: 0.5em;">
