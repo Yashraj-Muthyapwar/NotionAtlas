@@ -7,12 +7,53 @@ from sentence_transformers import SentenceTransformer
 
 # --- Page Config ---
 st.set_page_config(
-    page_title=" NotionAtlas",
+    page_title="NotionAtlas",
     page_icon="🧭",
     layout="wide"
 )
 
-# --- Minimal Top Section: Only Example Queries ---
+# --- Floating GitHub Button ---
+GITHUB_URL = "https://github.com/<your-username>/NotionAtlas"
+st.markdown(
+    f"""
+    <style>
+    .github-button {{
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        background-color: #24292f;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        transition: 0.2s;
+    }}
+    .github-button:hover {{
+        background-color: #444;
+    }}
+    </style>
+    <a class="github-button" href="{GITHUB_URL}" target="_blank">View on GitHub</a>
+    """,
+    unsafe_allow_html=True
+)
+
+# --- Minimal Landing ---
+st.markdown(
+    """
+    <div style="text-align:center; padding: 20px 0;">
+        <h1 style="margin-bottom: 0;">🧭 NotionAtlas</h1>
+        <h3 style="color: gray; font-weight: 400; margin-top: 5px;">
+            AI-Powered Semantic Search for Your Notion Workspace
+        </h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# --- Example Queries ---
 st.markdown(
     """
     <style>
