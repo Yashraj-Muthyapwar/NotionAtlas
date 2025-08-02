@@ -1,0 +1,5 @@
+streamlit
+requests
+qdrant-client
+sentence-transformers
+aiohttp
