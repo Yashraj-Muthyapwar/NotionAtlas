@@ -136,10 +136,10 @@ with st.sidebar:
             flex-direction:column;
             align-items:center;
             text-align:center;
-            margin-top:15px;
+            margin-top:20px;
         ">
             <!-- Logo -->
-            <img src="NotionAtlas_logo.png" width="74" style="margin-bottom: 18px;"/>
+            <img src="notionatlas_logo.png" width="74" style="margin-bottom: 18px;"/>
 
             <!-- App Name -->
             <div style="
@@ -158,8 +158,8 @@ with st.sidebar:
                 font-size: 1.05em;
                 font-style: italic;
                 margin-bottom: 24px;
-                max-width:200px;
-                line-height:1.4;
+                max-width: 220px;
+                line-height: 1.4;
             ">
                 AI Semantic Search & RAG Assistant for Notion
             </div>
@@ -177,13 +177,17 @@ with st.sidebar:
                     font-weight:600;
                     color:#333;
                     margin-bottom:26px;
-               ">
+                    transition: all 0.2s ease-in-out;
+               "
+               onmouseover="this.style.color='#6c63ff';"
+               onmouseout="this.style.color='#333';"
+            >
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="26"/>
                 View on GitHub
             </a>
 
             <!-- Separator -->
-            <hr style="border:none; border-top:1.3px solid #ececec; width: 85%; margin-bottom:20px;">
+            <hr style="border:none; border-top:1.3px solid #ececec; width: 80%; margin: 0 auto 20px auto;">
 
             <!-- Author -->
             <div style="
