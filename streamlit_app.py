@@ -8,7 +8,6 @@ from sentence_transformers import SentenceTransformer
 # --- Page Config ---
 st.set_page_config(
     page_title="🧭 NotionAtlas – AI Semantic Search for Notion",
-    page_icon="🧭",
     layout="wide"
 )
 
