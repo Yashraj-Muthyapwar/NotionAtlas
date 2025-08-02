@@ -143,7 +143,7 @@ with st.sidebar:
         </div>
         <hr style="border:none; border-top:1.5px solid #ececec; margin: 0.5em 0 1.2em 0;">
         <div style="color:#8a8a9c; font-size:1em; text-align:center;">
-            Built by <a href="https://github.com/Yashraj-Muthyapwar" target="_blank" style="color:#7866fa; font-weight:600; text-decoration:none;">Yashraj Muthyapwar</a>
+            Built by <a href="https://github.com/Yashraj-Muthyapwar" target="_blank" style="color:#0077ff; font-weight:600; text-decoration:none;">Yashraj Muthyapwar</a>
         </div>
         """,
         unsafe_allow_html=True
