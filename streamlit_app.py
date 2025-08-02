@@ -7,94 +7,27 @@ from sentence_transformers import SentenceTransformer
 
 # --- Page Config ---
 st.set_page_config(
-    page_title="NotionAtlas – AI Semantic Search for Notion",
+    page_title=" NotionAtlas",
     page_icon="🧭",
     layout="wide"
 )
 
-# --- Minimal Professional Styling ---
+# --- Minimal Top Section: Only Example Queries ---
 st.markdown(
     """
     <style>
-    /* Clean background */
-    .stApp {
-        background-color: #f8f9fb;
-    }
-    /* Landing container */
-    .landing-container {
-        text-align: center;
-        padding: 40px 0 30px 0;
-    }
-    .landing-title {
-        font-size: 3em;
-        font-weight: 700;
-        color: #222;
-        margin-bottom: 0;
-    }
-    .landing-subtitle {
-        color: #555;
-        font-weight: 400;
-        margin-top: 8px;
-        font-size: 1.3em;
-    }
-    .landing-description {
-        color: #666;
-        font-size: 1.05em;
-        max-width: 620px;
-        margin: 20px auto;
-    }
     .example-queries {
         background: white;
         border-radius: 12px;
         padding: 15px 25px;
-        margin: 0 auto 30px auto;
+        margin: 10px auto 30px auto;
         max-width: 500px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         font-size: 0.95em;
         color: #333;
-    }
-    /* Chat bubbles */
-    .user-msg {
-        background-color: #dce6ff;
-        padding: 10px 15px;
-        border-radius: 15px;
-        margin: 5px 0;
-        max-width: 80%;
-    }
-    .assistant-msg {
-        background-color: white;
-        padding: 10px 15px;
-        border-radius: 15px;
-        margin: 5px 0 15px 0;
-        max-width: 80%;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        text-align: center;
     }
     </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# --- Landing Section ---
-st.markdown(
-    """
-    <div class="landing-container">
-        <h1 class="landing-title">🧭 NotionAtlas</h1>
-        <h3 class="landing-subtitle">
-            AI-Powered Semantic Search for Your Notion Workspace
-        </h3>
-        <p class="landing-description">
-            Ask natural questions and instantly discover insights from your notes.
-            NotionAtlas combines semantic search with conversational memory
-            to turn your workspace into a smart knowledge hub.
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# --- Example Queries ---
-st.markdown(
-    """
     <div class="example-queries">
         💡 <b>Try asking:</b><br>
         • "Summarize my MongoDB exam prep notes"<br>
@@ -104,8 +37,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-st.write("---")
 
 st.subheader("💬 Ask NotionAtlas")
 st.caption("Type your question below to start a conversation with your Notion workspace.")
@@ -193,9 +124,9 @@ if user_input:
     with st.spinner("Thinking..."):
         asyncio.run(chat_with_memory(user_input))
 
-# --- Display Chat History as Styled Bubbles ---
+# --- Display Chat History ---
 for msg in st.session_state.chat_history:
     if msg["role"] == "user":
-        st.markdown(f"<div class='user-msg'>{msg['content']}</div>", unsafe_allow_html=True)
+        st.chat_message("user").markdown(msg["content"])
     else:
-        st.markdown(f"<div class='assistant-msg'>{msg['content']}</div>", unsafe_allow_html=True)
+        st.chat_message("assistant").markdown(msg["content"])
