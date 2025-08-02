@@ -15,7 +15,7 @@ st.set_page_config(
 # --- Title with Inline GitHub Icon ---
 st.markdown(
     """
-    <div style="display:flex; justify-content:center; align-items:center; gap:5px; padding: 20px 0;">
+    <div style="display:flex; justify-content:center; align-items:center; gap:5px; padding: 10px 0;">
         <h1 style="margin-bottom:0;">🧭 NotionAtlas</h1>
     </div>
     <h3 style="text-align:center; color: gray; font-weight: 400; margin-top: 0;">
