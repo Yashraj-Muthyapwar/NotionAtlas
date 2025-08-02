@@ -79,25 +79,51 @@ if "chat_history" not in st.session_state:
 if "conversation_context" not in st.session_state:
     st.session_state.conversation_context = ""
 
-# ---------- CHAT BUBBLE FUNCTION ----------
+# ---------- MODERN CHAT BUBBLES ----------
 def chat_bubble(msg, sender="user"):
-    color = "#fafafd" if sender == "user" else "#f3f7ff"
-    border = "1px solid #edeef3" if sender == "user" else "1px solid #e1e8fb"
-    icon = "🧑‍💻" if sender == "user" else "🤖"
+    if sender == "user":
+        color = "#fff"
+        border = "1.5px solid #ececf1"
+        align = "flex-start"
+        icon = "👩‍💻"
+        justify = "flex-start"
+        margin = "0 0 0 auto"
+    else:
+        color = "#f5f8ff"
+        border = "1.5px solid #dde9fb"
+        align = "flex-end"
+        icon = "🤖"
+        justify = "flex-end"
+        margin = "0 auto 0 0"
+
     st.markdown(
         f"""
-        <div style='
-            background:{color};
-            border-radius:15px;
-            border:{border};
-            margin:10px 0;
-            max-width:75%;
-            font-size:1.13em;
-            box-shadow:0 2px 8px rgba(40,60,100,0.05);
-            padding: 15px 22px 14px 18px;
-            display: flex; align-items: center;
-            '>
-            <span style='font-size:1.18em; margin-right:10px'>{icon}</span>{msg}
+        <div style="
+            display: flex; 
+            flex-direction: row;
+            justify-content: {justify};
+            margin-bottom: 14px;
+        ">
+            <div style="
+                background: {color};
+                border: {border};
+                border-radius: 18px;
+                padding: 18px 22px 16px 18px;
+                font-size: 1.14em;
+                color: #212127;
+                max-width: 82vw;
+                min-width: 120px;
+                width: fit-content;
+                box-shadow: 0 3px 18px rgba(80,110,200,0.07);
+                margin: {margin};
+                display: flex;
+                align-items: center;
+                word-break: break-word;
+                line-height: 1.7;
+            ">
+                <span style="font-size:1.35em; margin-right:13px;">{icon}</span>
+                <span style="line-height:1.72;">{msg}</span>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -150,23 +176,22 @@ async def chat_with_memory(user_input: str):
     st.session_state.conversation_context += f"\nAssistant: {answer}"
     return answer
 
-# ---------- CHAT CARD (NO EMPTY BOX!) ----------
+# ---------- CHAT AREA ----------
 user_input = st.chat_input("Ask a question about your Notion workspace...")
 
 if user_input:
     with st.spinner("Thinking..."):
         asyncio.run(chat_with_memory(user_input))
 
-# Show the chat card ONLY if there's content to show
 if st.session_state.chat_history:
     st.markdown("""
     <div style='
-        background: rgba(246,247,251,0.89);
+        background: rgba(246,247,251,0.93);
         border-radius: 22px;
         padding: 32px 38px 25px 38px;
         margin: 0 auto 1.2em auto;
         max-width: 850px;
-        box-shadow: 0 8px 32px rgba(80,90,120,0.08);
+        box-shadow: 0 8px 32px rgba(80,90,120,0.07);
         border: 1px solid #f0f1f7;
         '>
     """, unsafe_allow_html=True)
