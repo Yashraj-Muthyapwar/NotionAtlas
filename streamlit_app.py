@@ -126,3 +126,28 @@ for msg in st.session_state.chat_history:
         st.chat_message("user").markdown(msg["content"])
     else:
         st.chat_message("assistant").markdown(msg["content"])
+
+# --- SIDEBAR: Branding, Tagline, GitHub, Author ---
+with st.sidebar:
+    st.markdown(
+        """
+        <div style="text-align:center; margin-bottom: 0.5em;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" width="58" style="margin-bottom: 0.7em;" />
+            <div style="font-size: 1.55em; font-weight: 800; letter-spacing: -1px; margin-bottom:0.1em;">NotionAtlas</div>
+            <div style="color: #7d7e8a; font-size: 1.05em; margin-bottom:1.2em;">
+                <em>AI Semantic Search & RAG Assistant for Notion</em>
+            </div>
+        </div>
+        <div style="text-align:center; margin-bottom: 1.4em;">
+            <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank" style="text-decoration:none;">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="28" style="vertical-align:middle; margin-right: 6px;" />
+                <span style="font-size:1.10em; font-weight:500; color: #333; position:relative; top:-3px;">View on GitHub</span>
+            </a>
+        </div>
+        <hr style="border:none; border-top:1.5px solid #ececec; margin: 0.5em 0 1.2em 0;">
+        <div style="color:#8a8a9c; font-size:1em; text-align:center;">
+            Built by <a href="https://github.com/Yashraj-Muthyapwar" target="_blank" style="color:#7866fa; font-weight:600; text-decoration:none;">Yashraj Muthyapwar</a>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
