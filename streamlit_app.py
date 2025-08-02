@@ -31,7 +31,7 @@ st.markdown("""
         </a>
     </div>
 """, unsafe_allow_html=True)
-st.caption("Supercharge your Notion workspace with instant, context-aware answers powered by advanced AI and semantic search.")
+st.caption("Turn your Notion workspace into an intelligent, searchable knowledge hub.")
 
 # -------------------- SIDEBAR --------------------
 with st.sidebar:
