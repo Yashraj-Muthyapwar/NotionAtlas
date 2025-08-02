@@ -12,52 +12,23 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- Floating GitHub Button ---
-# --- Floating GitHub Button ---
-GITHUB_URL = "https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion"
-
-st.markdown(
-    f"""
-    <style>
-    .github-button {{
-        position: fixed;
-        top: 20px;
-        right: 30px;
-        background-color: #24292f;
-        color: white !important;
-        padding: 8px 16px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        transition: 0.2s;
-        z-index: 1000;
-    }}
-    .github-button:hover {{
-        background-color: #444;
-    }}
-    </style>
-    <a class="github-button" href="{GITHUB_URL}" target="_blank">View on GitHub</a>
-    """,
-    unsafe_allow_html=True
-)
-
-
-# --- Minimal Landing ---
+# --- Title with Inline GitHub Icon ---
 st.markdown(
     """
-    <div style="text-align:center; padding: 20px 0;">
-        <h1 style="margin-bottom: 0;">🧭 NotionAtlas</h1>
-        <h3 style="color: gray; font-weight: 400; margin-top: 5px;">
-            AI-Powered Semantic Search for Your Notion Workspace
-        </h3>
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px; padding: 20px 0;">
+        <h1 style="margin-bottom:0;">🧭 NotionAtlas</h1>
+        <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" width="28" style="margin-top:5px"/>
+        </a>
     </div>
+    <h3 style="text-align:center; color: gray; font-weight: 400; margin-top: 0;">
+        Turn your Notion workspace into an intelligent, searchable knowledge hub.
+    </h3>
     """,
     unsafe_allow_html=True
 )
 
-# --- Example Queries ---
+# --- Example Queries Section ---
 st.markdown(
     """
     <style>
@@ -65,7 +36,7 @@ st.markdown(
         background: white;
         border-radius: 12px;
         padding: 15px 25px;
-        margin: 10px auto 30px auto;
+        margin: 15px auto 30px auto;
         max-width: 500px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         font-size: 0.95em;
@@ -83,6 +54,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.subheader("💬 Ask NotionAtlas")
+st.caption("Type your question below to start a conversation with your Notion workspace.")
 
 # --- Load Secrets ---
 LLAMA_API_URL = "https://api.llama.com/v1/chat/completions"
@@ -108,23 +81,29 @@ if "conversation_context" not in st.session_state:
 
 # --- Async Chat Function ---
 async def chat_with_memory(user_input: str):
+    # 1️⃣ Encode query
     vector = embedder.encode(user_input).tolist()
+    
+    # 2️⃣ Query Qdrant
     results = qdrant.query_points(
         collection_name=COLLECTION_NAME,
         query=vector,
         limit=5
     )
 
+    # 3️⃣ Prepare semantic context
     context = "\n".join([
         hit.payload.get('chunk_text', '') for hit in results.points
     ]) or "No relevant context found."
 
+    # 4️⃣ Update conversation memory
     st.session_state.conversation_context += f"\nUser: {user_input}"
     combined_context = (
         f"Conversation history:\n{st.session_state.conversation_context}\n\n"
         f"Relevant Notion context:\n{context}"
     )
 
+    # 5️⃣ Call LLAMA API
     payload = {
         "model": "Llama-4-Maverick-17B-128E-Instruct-FP8",
         "messages": [
@@ -153,6 +132,7 @@ async def chat_with_memory(user_input: str):
             else:
                 answer = f"Error: {await resp.text()}"
 
+    # 6️⃣ Save to chat history and memory
     st.session_state.chat_history.append({"role": "user", "content": user_input})
     st.session_state.chat_history.append({"role": "assistant", "content": answer})
     st.session_state.conversation_context += f"\nAssistant: {answer}"
