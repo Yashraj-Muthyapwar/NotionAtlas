@@ -132,7 +132,7 @@ with st.sidebar:
     st.markdown(
         """
         <div style="text-align:center; margin-bottom: 0.5em;">
-            st.image("notionatlas_logo.png", width=58)
+            <img src="notionatlas_logo.png" width="58" style="margin-bottom: 0.7em;" />
             <div style="font-size: 1.55em; font-weight: 800; letter-spacing: -1px; margin-bottom:0.1em;">NotionAtlas</div>
             <div style="color: #7d7e8a; font-size: 1.05em; margin-bottom:1.2em;">
                 <em>AI Semantic Search & RAG Assistant for Notion</em>
