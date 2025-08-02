@@ -28,31 +28,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Example Queries Section ---
-st.markdown(
-    """
-    <style>
-    .example-queries {
-        background: white;
-        border-radius: 12px;
-        padding: 15px 25px;
-        margin: 15px auto 30px auto;
-        max-width: 500px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        font-size: 0.95em;
-        color: #333;
-        text-align: center;
-    }
-    </style>
-    <div class="example-queries">
-        💡 <b>Try asking:</b><br>
-        • "Summarize my MongoDB exam prep notes"<br>
-        • "What did I learn in Week 3: Sequence Models?"<br>
-        • "Show me all tasks marked as 'Not Started'"
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+
 
 # --- Load Secrets ---
 LLAMA_API_URL = "https://api.llama.com/v1/chat/completions"
