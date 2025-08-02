@@ -1,67 +1,36 @@
 import streamlit as st
+import requests
 import asyncio
 import aiohttp
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 
-# ---------- PAGE CONFIG ----------
+# --- Page Config ---
 st.set_page_config(
-    page_title="NotionAtlas — AI Semantic Search & RAG for Notion",
+    page_title="NotionAtlas",
     page_icon="🧭",
     layout="wide"
 )
 
-# ---------- HEADER ----------
-st.markdown("""
-    <div style="display: flex; align-items: center; justify-content: center; 
-                padding: 26px 0 12px 0; margin-top: 14px;
-                background: #fff; 
-                box-shadow: 0 4px 32px rgba(30,30,40,0.08); 
-                border-radius: 22px;
-                max-width: 900px;
-                margin-left: auto; margin-right: auto;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" width="50" style="margin-right:13px">
-        <span style="font-size:2.3em; font-weight:800; letter-spacing:-1.2px; font-family: 'Inter',sans-serif; color:#23232d;">
-            NotionAtlas
-        </span>
-        <span style="font-size:1.07em; color:#868686; font-weight:400; margin-left:13px;">
-            AI Semantic Search & RAG Assistant for Notion
-        </span>
-        <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank" 
-            title="GitHub Repo"
-            style="margin-left:20px;">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="29" style="vertical-align:middle;opacity:0.89"/>
+# --- Title with Inline GitHub Icon ---
+st.markdown(
+    """
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px; padding: 20px 0;">
+        <h1 style="margin-bottom:0;">🧭 NotionAtlas</h1>
+        <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" width="28" style="margin-top:5px"/>
         </a>
     </div>
-""", unsafe_allow_html=True)
-st.markdown(
-    "<div style='text-align:center; font-size:1.13em; color:#7c7c7c; margin-bottom:32px; margin-top:14px;'>"
-    "Supercharge your Notion workspace with instant, context-aware answers powered by advanced AI and semantic search."
-    "</div>",
+    <h3 style="text-align:center; color: gray; font-weight: 400; margin-top: 0;">
+        Turn your Notion workspace into an intelligent, searchable knowledge hub.
+    </h3>
+    """,
     unsafe_allow_html=True
 )
 
-# ---------- TRY ASKING SECTION ----------
-st.markdown("""
-<div style='
-    padding: 22px 29px 18px 29px;
-    background: linear-gradient(90deg, #ece9ff 90%, #f9f9ff 100%);
-    border-radius: 20px;
-    margin: 0 auto 1.4em auto;
-    max-width: 800px;
-    border: 1px solid #eee;
-    box-shadow: 0 4px 24px rgba(130,130,190,0.09);
-    '>
-    <span style='font-weight:700; color:#7866fa; font-size:1.22em;'>💡 Try asking:</span>
-    <ul style='margin:0.9em 0 0 1.25em; font-size:1.09em; color:#272727;'>
-        <li>How can I scrape tables from web pages using Pandas?</li>
-        <li>Compare Decision Trees and Neural Networks for classification.</li>
-        <li>Explain vocabulary and feature extraction in NLP.</li>
-    </ul>
-</div>
-""", unsafe_allow_html=True)
 
-# ---------- Load Secrets and Models ----------
+
+# --- Load Secrets ---
 LLAMA_API_URL = "https://api.llama.com/v1/chat/completions"
 LLAMA_API_KEY = st.secrets["LLAMA_API_KEY"]
 QDRANT_URL = st.secrets["QDRANT_URL"]
@@ -71,80 +40,43 @@ HF_TOKEN = st.secrets.get("HF_TOKEN", None)
 COLLECTION_NAME = "notion_content"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
+# --- Initialize Clients ---
 qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 embedder = SentenceTransformer(EMBEDDING_MODEL, use_auth_token=HF_TOKEN)
 
+# --- Session State ---
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+
 if "conversation_context" not in st.session_state:
     st.session_state.conversation_context = ""
 
-# ---------- MODERN CHAT BUBBLES ----------
-def chat_bubble(msg, sender="user"):
-    if sender == "user":
-        color = "#fff"
-        border = "1.5px solid #ececf1"
-        align = "flex-start"
-        icon = "👩‍💻"
-        justify = "flex-start"
-        margin = "0 0 0 auto"
-    else:
-        color = "#f5f8ff"
-        border = "1.5px solid #dde9fb"
-        align = "flex-end"
-        icon = "🤖"
-        justify = "flex-end"
-        margin = "0 auto 0 0"
 
-    st.markdown(
-        f"""
-        <div style="
-            display: flex; 
-            flex-direction: row;
-            justify-content: {justify};
-            margin-bottom: 14px;
-        ">
-            <div style="
-                background: {color};
-                border: {border};
-                border-radius: 18px;
-                padding: 18px 22px 16px 18px;
-                font-size: 1.14em;
-                color: #212127;
-                max-width: 82vw;
-                min-width: 120px;
-                width: fit-content;
-                box-shadow: 0 3px 18px rgba(80,110,200,0.07);
-                margin: {margin};
-                display: flex;
-                align-items: center;
-                word-break: break-word;
-                line-height: 1.7;
-            ">
-                <span style="font-size:1.35em; margin-right:13px;">{icon}</span>
-                <span style="line-height:1.72;">{msg}</span>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-# ---------- ASYNC CHAT WITH MEMORY ----------
+# --- Async Chat Function ---
 async def chat_with_memory(user_input: str):
+    # 1️⃣ Encode query
     vector = embedder.encode(user_input).tolist()
+    
+    # 2️⃣ Query Qdrant
     results = qdrant.query_points(
         collection_name=COLLECTION_NAME,
         query=vector,
         limit=5
     )
+
+    # 3️⃣ Prepare semantic context
     context = "\n".join([
         hit.payload.get('chunk_text', '') for hit in results.points
     ]) or "No relevant context found."
+
+    # 4️⃣ Update conversation memory
     st.session_state.conversation_context += f"\nUser: {user_input}"
     combined_context = (
         f"Conversation history:\n{st.session_state.conversation_context}\n\n"
         f"Relevant Notion context:\n{context}"
     )
+
+    # 5️⃣ Call LLAMA API
     payload = {
         "model": "Llama-4-Maverick-17B-128E-Instruct-FP8",
         "messages": [
@@ -162,6 +94,7 @@ async def chat_with_memory(user_input: str):
         "max_tokens": 500,
         "temperature": 0.2
     }
+
     headers = {"Authorization": f"Bearer {LLAMA_API_KEY}", "Content-Type": "application/json"}
 
     async with aiohttp.ClientSession() as session:
@@ -171,53 +104,25 @@ async def chat_with_memory(user_input: str):
                 answer = data["completion_message"]["content"]["text"].strip()
             else:
                 answer = f"Error: {await resp.text()}"
+
+    # 6️⃣ Save to chat history and memory
     st.session_state.chat_history.append({"role": "user", "content": user_input})
     st.session_state.chat_history.append({"role": "assistant", "content": answer})
     st.session_state.conversation_context += f"\nAssistant: {answer}"
+
     return answer
 
-# ---------- CHAT AREA ----------
+
+# --- Chat Input ---
 user_input = st.chat_input("Ask a question about your Notion workspace...")
 
 if user_input:
     with st.spinner("Thinking..."):
         asyncio.run(chat_with_memory(user_input))
 
-if st.session_state.chat_history:
-    st.markdown("""
-    <div style='
-        background: rgba(246,247,251,0.93);
-        border-radius: 22px;
-        padding: 32px 38px 25px 38px;
-        margin: 0 auto 1.2em auto;
-        max-width: 850px;
-        box-shadow: 0 8px 32px rgba(80,90,120,0.07);
-        border: 1px solid #f0f1f7;
-        '>
-    """, unsafe_allow_html=True)
-    for msg in st.session_state.chat_history:
-        if msg["role"] == "user":
-            chat_bubble(msg["content"], sender="user")
-        else:
-            chat_bubble(msg["content"], sender="assistant")
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# ---------- CUSTOM FOOTER & INPUT CSS ----------
-st.markdown(
-    """
-    <style>
-    footer {visibility: hidden;}
-    .stTextInput>div>div>input {
-        border-radius: 13px;
-        border: 1.5px solid #e5e8ee;
-        padding: 13px;
-        font-size: 1.12em;
-        margin-bottom: 8px;
-        box-shadow: 0 1.5px 8px rgba(120,120,160,0.06);
-        background: #fafaff;
-    }
-    .st-emotion-cache-1r4qj8v {padding-top: 1.4rem;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# --- Display Chat History ---
+for msg in st.session_state.chat_history:
+    if msg["role"] == "user":
+        st.chat_message("user").markdown(msg["content"])
+    else:
+        st.chat_message("assistant").markdown(msg["content"])
