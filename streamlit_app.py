@@ -138,7 +138,7 @@ with st.sidebar:
         <div style="text-align:center; margin-bottom: 1.4em;">
             <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank" style="text-decoration:none;">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="28" style="vertical-align:middle; margin-right: 6px;" />
-                <span style="font-size:1.10em; font-weight:500; color: #333; position:relative; top:-3px;">View on GitHub</span>
+                <span style="font-size:1.10em; font-weight:500; color: #333; position:relative; top:-4px;">View on GitHub</span>
             </a>
         </div>
         <hr style="border:none; border-top:1.5px solid #ececec; margin: 0.5em 0 1.2em 0;">
