@@ -129,25 +129,77 @@ for msg in st.session_state.chat_history:
 
 # --- SIDEBAR: Branding, Tagline, GitHub, Author ---
 with st.sidebar:
-    st.image("NotionAtlas_logo.png", width=70)
     st.markdown(
         """
-        <div style="text-align:center; margin-top: 0.5em;">
-            <div style="font-size: 1.55em; font-weight: 800; letter-spacing: -1px; margin-bottom:0.1em;">NotionAtlas</div>
-            <div style="color: #7d7e8a; font-size: 1.05em; margin-bottom:1.2em;">
-                <em>AI Semantic Search & RAG Assistant for Notion</em>
+        <div style="
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            text-align:center;
+            margin-top:15px;
+        ">
+            <!-- Logo -->
+            <img src="NotionAtlas_logo.png" width="74" style="margin-bottom: 18px;"/>
+
+            <!-- App Name -->
+            <div style="
+                font-size: 1.7em;
+                font-weight: 800;
+                letter-spacing: -1px;
+                color:#222;
+                margin-bottom:6px;
+            ">
+                NotionAtlas
             </div>
-        </div>
-        <div style="text-align:center; margin-bottom: 1.4em;">
-            <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion" target="_blank" style="text-decoration:none;">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="28" style="vertical-align:middle; margin-right: 6px;" />
-                <span style="font-size:1.10em; font-weight:500; color: #333;">View on GitHub</span>
+
+            <!-- Tagline -->
+            <div style="
+                color: #7d7e8a;
+                font-size: 1.05em;
+                font-style: italic;
+                margin-bottom: 24px;
+                max-width:200px;
+                line-height:1.4;
+            ">
+                AI Semantic Search & RAG Assistant for Notion
+            </div>
+
+            <!-- GitHub Link -->
+            <a href="https://github.com/Yashraj-Muthyapwar/NotionAtlas-AI-Semantic-Search-And-RAG-Assistant-for-Notion"
+               target="_blank"
+               style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    gap:8px;
+                    text-decoration:none;
+                    font-size: 1.12em;
+                    font-weight:600;
+                    color:#333;
+                    margin-bottom:26px;
+               ">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="26"/>
+                View on GitHub
             </a>
-        </div>
-        <hr style="border:none; border-top:1.5px solid #ececec; margin: 0.5em 0 1.2em 0;">
-        <div style="color:#8a8a9c; font-size:1em; text-align:center;">
-            Built by <a href="https://github.com/Yashraj-Muthyapwar" target="_blank" style="color:#0077ff; font-weight:600; text-decoration:none;">Yashraj Muthyapwar</a>
+
+            <!-- Separator -->
+            <hr style="border:none; border-top:1.3px solid #ececec; width: 85%; margin-bottom:20px;">
+
+            <!-- Author -->
+            <div style="
+                color:#8a8a9c;
+                font-size:1em;
+                text-align:center;
+            ">
+                Built by 
+                <a href="https://github.com/Yashraj-Muthyapwar"
+                   target="_blank"
+                   style="color:#6c63ff; font-weight:600; text-decoration:none;">
+                   Yashraj Muthyapwar
+                </a>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
     )
+
