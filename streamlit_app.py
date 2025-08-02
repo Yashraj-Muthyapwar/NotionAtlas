@@ -5,60 +5,69 @@ import aiohttp
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 
-# --- Streamlit Page Config ---
+# --- Page Config ---
 st.set_page_config(
     page_title="🧭 NotionAtlas – AI Semantic Search for Notion",
     page_icon="🧭",
     layout="wide"
 )
 
-# --- Custom CSS for Gradient Background & Animations ---
+# --- Minimal Professional Styling ---
 st.markdown(
     """
     <style>
-    /* Gradient background */
+    /* Clean background */
     .stApp {
-        background: linear-gradient(135deg, #f0f4ff, #f8faff 50%, #ffffff);
+        background-color: #f8f9fb;
     }
-    /* Centered landing section */
+    /* Landing container */
     .landing-container {
         text-align: center;
         padding: 40px 0 30px 0;
-        animation: fadeIn 1s ease-in;
     }
-    /* Title animation */
     .landing-title {
         font-size: 3em;
+        font-weight: 700;
+        color: #222;
         margin-bottom: 0;
-        background: linear-gradient(to right, #2e5cff, #00bfa6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: fadeIn 1.2s ease-in;
     }
     .landing-subtitle {
-        color: gray;
+        color: #555;
         font-weight: 400;
-        margin-top: 0;
+        margin-top: 8px;
         font-size: 1.3em;
-        animation: fadeIn 1.5s ease-in;
     }
     .landing-description {
-        color: #555;
-        font-size: 1.1em;
-        max-width: 650px;
+        color: #666;
+        font-size: 1.05em;
+        max-width: 620px;
         margin: 20px auto;
-        animation: fadeIn 1.8s ease-in;
     }
     .example-queries {
-        text-align: center;
-        padding: 10px 0 30px 0;
-        animation: fadeIn 2s ease-in;
+        background: white;
+        border-radius: 12px;
+        padding: 15px 25px;
+        margin: 0 auto 30px auto;
+        max-width: 500px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        font-size: 0.95em;
         color: #333;
     }
-    /* Simple fade-in keyframe */
-    @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(10px); }
-        100% { opacity: 1; transform: translateY(0); }
+    /* Chat bubbles */
+    .user-msg {
+        background-color: #dce6ff;
+        padding: 10px 15px;
+        border-radius: 15px;
+        margin: 5px 0;
+        max-width: 80%;
+    }
+    .assistant-msg {
+        background-color: white;
+        padding: 10px 15px;
+        border-radius: 15px;
+        margin: 5px 0 15px 0;
+        max-width: 80%;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
     </style>
     """,
@@ -71,21 +80,23 @@ st.markdown(
     <div class="landing-container">
         <h1 class="landing-title">🧭 NotionAtlas</h1>
         <h3 class="landing-subtitle">
-            Turn your Notion workspace into an intelligent, searchable knowledge hub.
+            AI-Powered Semantic Search for Your Notion Workspace
         </h3>
         <p class="landing-description">
-            Ask questions in natural language and instantly retrieve context-aware insights from your notes.
-            Powered by AI semantic search with conversational memory.
+            Ask natural questions and instantly discover insights from your notes.
+            NotionAtlas combines semantic search with conversational memory
+            to turn your workspace into a smart knowledge hub.
         </p>
     </div>
     """,
     unsafe_allow_html=True
 )
 
+# --- Example Queries ---
 st.markdown(
     """
     <div class="example-queries">
-        <b>💡 Try asking:</b><br>
+        💡 <b>Try asking:</b><br>
         • "Summarize my MongoDB exam prep notes"<br>
         • "What did I learn in Week 3: Sequence Models?"<br>
         • "Show me all tasks marked as 'Not Started'"
@@ -113,7 +124,7 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 embedder = SentenceTransformer(EMBEDDING_MODEL, use_auth_token=HF_TOKEN)
 
-# --- Session State for Memory ---
+# --- Session State ---
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
@@ -121,31 +132,25 @@ if "conversation_context" not in st.session_state:
     st.session_state.conversation_context = ""
 
 
-# --- Async Chat Function with Memory ---
+# --- Async Chat Function ---
 async def chat_with_memory(user_input: str):
-    # 1️⃣ Embed user query
     vector = embedder.encode(user_input).tolist()
-
-    # 2️⃣ Query Qdrant
     results = qdrant.query_points(
         collection_name=COLLECTION_NAME,
         query=vector,
         limit=5
     )
 
-    # 3️⃣ Semantic context
     context = "\n".join([
         hit.payload.get('chunk_text', '') for hit in results.points
     ]) or "No relevant context found."
 
-    # 4️⃣ Append to memory
     st.session_state.conversation_context += f"\nUser: {user_input}"
     combined_context = (
         f"Conversation history:\n{st.session_state.conversation_context}\n\n"
         f"Relevant Notion context:\n{context}"
     )
 
-    # 5️⃣ Call LLAMA API
     payload = {
         "model": "Llama-4-Maverick-17B-128E-Instruct-FP8",
         "messages": [
@@ -174,7 +179,6 @@ async def chat_with_memory(user_input: str):
             else:
                 answer = f"Error: {await resp.text()}"
 
-    # 6️⃣ Update memory
     st.session_state.chat_history.append({"role": "user", "content": user_input})
     st.session_state.chat_history.append({"role": "assistant", "content": answer})
     st.session_state.conversation_context += f"\nAssistant: {answer}"
@@ -187,11 +191,11 @@ user_input = st.chat_input("Ask a question about your Notion workspace...")
 
 if user_input:
     with st.spinner("Thinking..."):
-        answer = asyncio.run(chat_with_memory(user_input))
+        asyncio.run(chat_with_memory(user_input))
 
-# --- Display Chat History ---
+# --- Display Chat History as Styled Bubbles ---
 for msg in st.session_state.chat_history:
     if msg["role"] == "user":
-        st.chat_message("user").markdown(msg["content"])
+        st.markdown(f"<div class='user-msg'>{msg['content']}</div>", unsafe_allow_html=True)
     else:
-        st.chat_message("assistant").markdown(msg["content"])
+        st.markdown(f"<div class='assistant-msg'>{msg['content']}</div>", unsafe_allow_html=True)
